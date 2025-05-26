@@ -1,6 +1,23 @@
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     font-family: sans-serif;
     margin: 20px;
+}
+
+#header {
+  height: 15%;
+  margin-top: 20px;
+}
+
+#table-container {
+  height: 80%;
+  overflow-y: auto;
+  border-top: 1px solid #ccc;
 }
 
 h1 {
@@ -34,10 +51,15 @@ button {
     min-height: 30px;
 }
 
+#table-container {
+    height: 80%;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 1em;
 }
 
 #data-table th,
@@ -45,7 +67,18 @@ table {
     padding: 5px;
     text-align: center;
     border: 1px solid #ccc;
+    border-top: none;
+    border-left: none;
     word-wrap: break-word;
+}
+
+#data-table thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    z-index: 1;
 }
 
 button:disabled {

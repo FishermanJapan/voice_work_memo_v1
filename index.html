@@ -11,42 +11,46 @@
 </head>
 
 <body>
+    
+    <div id="header">
+        <div class="controls">
+            <button id="start-btn" onclick="openStartModal()">開始</button>
+            <button id="end-btn" onclick="stopRecognition()" disabled>終了</button>
+            <button id="download-btn" onclick="downloadCSV()" disabled>ダウンロード</button>
+            <a href="howto.html" target="_blank" style="padding: 10px; font-size: 1em;">使い方</a>
+            <div id="save-status">
+            </div>
+        </div>
 
-    <div class="controls">
-        <button id="start-btn" onclick="openStartModal()">開始</button>
-        <button id="end-btn" onclick="stopRecognition()" disabled>終了</button>
-        <button id="download-btn" onclick="downloadCSV()" disabled>ダウンロード</button>
-        <a href="howto.html" target="_blank" style="padding: 10px; font-size: 1em;">使い方</a>
-        <div id="save-status">
+        <div class="input-box" id="speech-output">
+            <!-- 発言内容がここに表示されます -->
         </div>
     </div>
 
-    <div class="input-box" id="speech-output">
-        <!-- 発言内容がここに表示されます -->
+    <div id="table-container">
+        <table id="data-table">
+            <colgroup>
+                <col style="width: 5%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>重さ</th>
+                    <th>回数</th>
+                    <th>開始</th>
+                    <th>終了</th>
+                    <th>温度</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-
-    <table id="data-table">
-        <colgroup>
-            <col style="width: 5%;">
-            <col style="width: 19%;">
-            <col style="width: 19%;">
-            <col style="width: 19%;">
-            <col style="width: 19%;">
-            <col style="width: 19%;">
-        </colgroup>
-        <thead>
-            <tr>
-                <th></th>
-                <th>重さ</th>
-                <th>回数</th>
-                <th>開始</th>
-                <th>終了</th>
-                <th>温度</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
 
     <!-- 開始画面用モーダル -->
     <div id="start-modal" class="modal hidden">

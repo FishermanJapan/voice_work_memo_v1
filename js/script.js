@@ -22,8 +22,8 @@ document.getElementById("dialog-cancel").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 初期テーブルの20行生成
-    createInitialRows(20);
+    // 初期テーブルの25行生成
+    createInitialRows(25);
 
     // 10秒ごとに差分をチェックし、更新がある場合はAPIによる更新を行う。
     lastSnapshot = JSON.stringify(getTableSnapshot());
@@ -94,6 +94,7 @@ function initSpeechRecognition() {
                 selectedRow = rowNum - 1;
                 focusedColumn = "重さ";
                 updateHighlights();
+                scrollToSelectedRow();
                 console.log(`選択された行: ${selectedRow + 1}`);
             }
             return;
@@ -569,7 +570,18 @@ function hasTableData() {
     return false;
 }
 
-function getUrlStr(){
+function scrollToSelectedRow() {
+    if (typeof selectedRow === 'number') {
+        const tableBody = document.querySelector('#data-table tbody');
+        const row = tableBody?.rows[selectedRow];
+
+        if (row) {
+            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+}
+
+function getUrlStr() {
     const GAS_SERVER = "AKfycbz490Phbb8WJbJFlHCiVRKbm9mEWgpRMceKgNjZc1EdwFaTTZkP8-JsDEb9GmQihoIZ/exec";
     return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
 }
