@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声作業メモ</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="controls">
+        <button id="start-btn" onclick="openStartModal()">開始</button>
+        <button id="end-btn" onclick="stopRecognition()" disabled>終了</button>
+        <button id="download-btn" onclick="downloadCSV()" disabled>ダウンロード</button>
+        <div id="save-status">
+        </div>
+    </div>
+
+    <div class="input-box" id="speech-output">
+        <!-- 発言内容がここに表示されます -->
+    </div>
+
+    <table id="data-table">
+        <colgroup>
+            <col style="width: 5%;">
+            <col style="width: 19%;">
+            <col style="width: 19%;">
+            <col style="width: 19%;">
+            <col style="width: 19%;">
+            <col style="width: 19%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th></th>
+                <th>重さ</th>
+                <th>回数</th>
+                <th>開始</th>
+                <th>終了</th>
+                <th>温度</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <!-- 開始画面用モーダル -->
+    <div id="start-modal" class="modal hidden">
+        <label>日付: <input type="date" id="dialog-date" class="start-modal-input" /></label><br><br>
+        <label>ID: <input type="text" id="dialog-id" class="start-modal-input" /></label><br><br>
+        <div id="id-error"></div>
+        <div class="modal-buttons">
+            <button id="dialog-ok">OK</button>
+            <button id="dialog-cancel">キャンセル</button>
+        </div>
+    </div>
+
+    <!-- 開始画面用オーバーレイ -->
+    <div id="overlay" class="hidden"></div>
+
+    <script src="./js/script.js"></script>
+
+</body>
+
+</html>

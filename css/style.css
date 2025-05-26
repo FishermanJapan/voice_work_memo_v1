@@ -1,0 +1,196 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 5px 10px 5px 10px;
+    font-size: 1em;
+}
+
+#data-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.input-box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 1.1em;
+    min-height: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+#data-table th,
+#data-table td {
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ccc;
+    word-wrap: break-word;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    background: white;
+    padding: 1em;
+    border: 1px solid #aaa;
+    box-shadow: 0 0 10px #0003;
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+#start-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 300px;
+    min-height: 200px;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.start-modal-input {
+    width: 100%;
+    height: 2rem;
+    resize: vertical;
+    font-size: 1rem;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+#id-error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+.hidden {
+    display: none;
+}
+
+.usage-guide {
+    margin-top: 20px;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95em;
+}
+
+.usage-guide h3 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.usage-guide ul {
+    margin: 0;
+    padding-left: 1.2em;
+}
+
+.usage-guide li {
+    margin-bottom: 0.5em;
+}
+
+/* ここから新規追加 */
+
+.selected-row {
+    background-color: #e0f0ff !important;
+}
+
+.selected-col {
+    background-color: #f0f8ff !important;
+}
+
+.selected-cell {
+    background-color: #cce5ff !important;
+    border: 2px solid #007acc !important;
+}
+
+/* ✅ ダイアログ用スタイル */
+#input-dialog {
+    /* display: none; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+#input-dialog>div {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 300px;
+}
+
+#save-status {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1em;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    padding: 6px 12px;
+    z-index: 1000;
+}
