@@ -92,6 +92,7 @@ function initSpeechRecognition() {
             const rowNum = parseInt(rowMatch[1], 10);
             if (rowNum >= 1 && rowNum <= document.querySelectorAll("#data-table tbody tr").length) {
                 selectedRow = rowNum - 1;
+                focusedColumn = "重さ";
                 updateHighlights();
                 console.log(`選択された行: ${selectedRow + 1}`);
             }
