@@ -576,7 +576,7 @@ function scrollToSelectedRow() {
         const row = tableBody?.rows[selectedRow];
 
         if (row) {
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            row.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
     }
 }
