@@ -1,7 +1,7 @@
 let recognition;
 let isRecognizing = false;
 let selectedRow = 0;
-let focusedColumn = "重さ";
+let focusedColumn = "";
 let currentDate = "";
 let currentId = "";
 let lastSnapshot = null;
@@ -92,7 +92,7 @@ function initSpeechRecognition() {
             const rowNum = parseInt(rowMatch[1], 10);
             if (rowNum >= 1 && rowNum <= document.querySelectorAll("#data-table tbody tr").length) {
                 selectedRow = rowNum - 1;
-                focusedColumn = "重さ";
+                focusedColumn = "";
                 updateHighlights();
                 scrollToSelectedRow();
                 console.log(`選択された行: ${selectedRow + 1}`);
@@ -106,7 +106,6 @@ function initSpeechRecognition() {
                 focusedColumn = colName;
                 updateHighlights();
                 console.log(`フォーカス中のカラム: ${focusedColumn}`);
-                return;
             }
         }
 
@@ -143,6 +142,8 @@ function initSpeechRecognition() {
                         console.log(`行${selectedRow + 1}の「終了」に ${endStr} を自動入力`);
                     }
                 }
+                focusedColumn = "";
+                updateHighlights();
                 return;
             }
 
@@ -158,6 +159,8 @@ function initSpeechRecognition() {
                     const cellIndex = columnMap[focusedColumn];
                     row.cells[cellIndex].textContent = value;
                     console.log(`行${selectedRow + 1}の「${focusedColumn}」に ${value} を入力`);
+                    focusedColumn = "";
+                    updateHighlights();
                 }
                 return;
             }
@@ -319,7 +322,7 @@ function updateDownloadButtonState() {
 
 function updateHighlights(isClear = false) {
     const rows = document.querySelectorAll("#data-table tbody tr");
-    const colIndex = columnMap[focusedColumn];
+    const colIndex = !focusedColumn ? -1 : columnMap[focusedColumn];
 
     rows.forEach((row, i) => {
         // 行のハイライト
