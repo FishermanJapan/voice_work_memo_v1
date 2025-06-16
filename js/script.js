@@ -582,6 +582,6 @@ function scrollToSelectedRow() {
 }
 
 function getUrlStr() {
-    const GAS_SERVER = "AKfycbz490Phbb8WJbJFlHCiVRKbm9mEWgpRMceKgNjZc1EdwFaTTZkP8-JsDEb9GmQihoIZ/exec";
+    const GAS_SERVER = "AKfycbzOBoZ7L-7NYbCIHvRWpM1FgHJEpp-qaLV_sP_1WzfMELLrKLUp_KtswIYnkxxg-wBK/exec";
     return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
 }

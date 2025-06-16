@@ -24,7 +24,7 @@ function doPost(e) {
 function request(req) {
   const dateStr = req.date; // e.g., "2025-05-22"
   const sheetName = dateStr.slice(0, 4) + dateStr.slice(5, 7); // e.g., "202505"
-  const id = req.id;
+  const id = "id" + req.id;
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(sheetName);
@@ -53,13 +53,13 @@ function request(req) {
       temp: r[7]
     }));
 
-  return { date: dateStr, id: id, data: matchedData };
+  return { date: dateStr, id: req.id, data: matchedData };
 }
 
 function update(req) {
   const dateStr = req.date; // e.g., "2025-05-22"
   const sheetName = dateStr.slice(0, 4) + dateStr.slice(5, 7); // e.g., "202505"
-  const id = req.id;
+  const id = "id" + req.id;
   const dataList = req.data;
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -107,8 +107,8 @@ function update(req) {
 function request_test() {
   const req = {
     "data_typ": "request",
-    "date": "2025-06-22",
-    "id": "test"
+    "date": "2025-05-29",
+    "id": "00123"
   }
 
   console.log(request(req));
@@ -117,8 +117,8 @@ function request_test() {
 function update_test() {
   const req = {
     "data_typ": "update",
-    "date": "2025-05-22",
-    "id": "test",
+    "date": "2025-05-29",
+    "id": "00123",
     "data": [
       {
         "index": 1,
@@ -126,31 +126,7 @@ function update_test() {
         "times": 23,
         "start_time": "05:10",
         "end_time": "05:20",
-        "temp": 21
-      },
-      {
-        "index": 2,
-        "weight": 12,
-        "times": 23,
-        "start_time": "05:10",
-        "end_time": "05:20",
-        "temp": 99
-      },
-      {
-        "index": 3,
-        "weight": 12,
-        "times": 23,
-        "start_time": "05:10",
-        "end_time": "05:20",
-        "temp": 21
-      },
-      {
-        "index": 4,
-        "weight": null,
-        "times": null,
-        "start_time": null,
-        "end_time": "05:20",
-        "temp": 21
+        "temp": 25
       }
     ]
   }
