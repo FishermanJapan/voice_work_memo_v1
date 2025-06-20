@@ -86,6 +86,9 @@ function initSpeechRecognition() {
             return;
         }
 
+        // 数値正規化
+        finalTranscript = normalizeTextWithNumbers(finalTranscript);
+
         // 行選択：「○行目」
         const rowMatch = finalTranscript.match(/(\d+)行目/);
         if (rowMatch) {
@@ -121,8 +124,16 @@ function initSpeechRecognition() {
             }
 
             if (timeMatch) {
-                const hour = timeMatch[1].padStart(2, '0');
-                const minute = timeMatch[2].padStart(2, '0');
+                let hour = timeMatch[1].padStart(2, '0');
+                let minute = timeMatch[2].padStart(2, '0');
+                
+                // Date オブジェクトを使って補正
+                const baseDate = new Date(0);
+                baseDate.setHours(hour);
+                baseDate.setMinutes(minute);
+                hour = String(baseDate.getHours()).padStart(2, '0');
+                minute = String(baseDate.getMinutes()).padStart(2, '0');
+
                 const timeStr = `${hour}:${minute}`;
                 const row = document.querySelectorAll("#data-table tbody tr")[selectedRow];
                 if (row) {
@@ -591,6 +602,54 @@ function getUrlStr() {
 }
 
 function updateInfoDisplay(dateStr, idStr) {
-  const infoDiv = document.getElementById("info-display");
-  infoDiv.textContent = ` 日付: ${dateStr} / ID: ${idStr} `;
+    const infoDiv = document.getElementById("info-display");
+    infoDiv.textContent = ` 日付: ${dateStr} / ID: ${idStr} `;
+}
+
+function normalizeTextWithNumbers(text) {
+    // 全角→半角数字へ
+    text = text.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+
+    // 漢数字の変換（百まで）
+    const kanjiDigitMap = {
+        "〇": 0, "零": 0, "一": 1, "二": 2, "三": 3, "四": 4,
+        "五": 5, "六": 6, "七": 7, "八": 8, "九": 9
+    };
+
+    // マッチするパターン例：「百二十三」「五十」「三」
+    const pattern = /[一二三四五六七八九]?[百]?[一二三四五六七八九]?[十]?[一二三四五六七八九]?/g;
+
+    text = text.replace(pattern, (match) => {
+        if (!match) return match;
+
+        let num = 0;
+        let temp = match;
+
+        // 百
+        if (temp.includes("百")) {
+            const idx = temp.indexOf("百");
+            const left = temp.slice(0, idx);
+            num += (left ? kanjiDigitMap[left] : 1) * 100;
+            temp = temp.slice(idx + 1);
+        }
+
+        // 十
+        if (temp.includes("十")) {
+            const idx = temp.indexOf("十");
+            const left = temp.slice(0, idx);
+            num += (left ? kanjiDigitMap[left] : 1) * 10;
+            temp = temp.slice(idx + 1);
+        }
+
+        // 一の位
+        if (temp.length === 1 && kanjiDigitMap[temp]) {
+            num += kanjiDigitMap[temp];
+        } else if (temp.length > 1) {
+            return match; // 不正なパターンはそのまま
+        }
+
+        return num > 0 ? String(num) : match;
+    });
+
+    return text;
 }
