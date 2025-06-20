@@ -10,13 +10,13 @@ body {
 }
 
 #header {
-  height: 15%;
+    height: 15%;
 }
 
 #table-container {
-  height: 80%;
-  overflow-y: auto;
-  border-top: 1px solid #ccc;
+    height: 80%;
+    overflow-y: auto;
+    border-top: 1px solid #ccc;
 }
 
 h1 {
@@ -225,4 +225,11 @@ button:disabled {
     transition: opacity 0.5s ease-in-out;
     padding: 6px 12px;
     z-index: 1000;
+}
+
+.info-badge {
+    text-align: center;
+    font-size: 1.1em;
+    margin: 10px 0 20px;
+    color: #333;
 }

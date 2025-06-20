@@ -415,6 +415,7 @@ async function doOkStartModal() {
             currentId = id;
             document.getElementById("start-modal").classList.add("hidden");
             document.getElementById('overlay').classList.add('hidden');
+            updateInfoDisplay(date, id);
             startRecognition();
         } else {
             alert("無効なレスポンスです。\r\nシステム管理者に連絡してください。");
@@ -587,4 +588,9 @@ function scrollToSelectedRow() {
 function getUrlStr() {
     const GAS_SERVER = "AKfycbzOBoZ7L-7NYbCIHvRWpM1FgHJEpp-qaLV_sP_1WzfMELLrKLUp_KtswIYnkxxg-wBK/exec";
     return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
+}
+
+function updateInfoDisplay(dateStr, idStr) {
+  const infoDiv = document.getElementById("info-display");
+  infoDiv.textContent = ` 日付: ${dateStr} / ID: ${idStr} `;
 }
