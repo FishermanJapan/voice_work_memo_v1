@@ -435,8 +435,8 @@ async function doOkStartModal() {
             populateTable(json.table_data);
             currentDate = date;
             currentId = id;
-            userNm = json.body.user_nm;
-            corpNm = json.body.corp_nm;
+            userNm = json.user_nm;
+            corpNm = json.corp_nm;
             document.getElementById("start-modal").classList.add("hidden");
             document.getElementById('overlay').classList.add('hidden');
             updateInfoDisplay(date, id, userNm, corpNm);
