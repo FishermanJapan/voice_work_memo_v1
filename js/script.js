@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, 10000);
 
+    // Cognitoユーザー情報取得
+    getUserInfo();
+
     // DOMが生成された時点で開始モーダルを表示する。
     openStartModal();
 });
@@ -126,7 +129,7 @@ function initSpeechRecognition() {
             if (timeMatch) {
                 let hour = timeMatch[1].padStart(2, '0');
                 let minute = timeMatch[2].padStart(2, '0');
-                
+
                 // Date オブジェクトを使って補正
                 const baseDate = new Date(0);
                 baseDate.setHours(hour);
@@ -596,11 +599,6 @@ function scrollToSelectedRow() {
     }
 }
 
-function getUrlStr() {
-    const GAS_SERVER = "AKfycbzOBoZ7L-7NYbCIHvRWpM1FgHJEpp-qaLV_sP_1WzfMELLrKLUp_KtswIYnkxxg-wBK/exec";
-    return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
-}
-
 function updateInfoDisplay(dateStr, idStr) {
     const infoDiv = document.getElementById("info-display");
     infoDiv.textContent = ` 日付: ${dateStr} / ID: ${idStr} `;
@@ -652,4 +650,46 @@ function normalizeTextWithNumbers(text) {
     });
 
     return text;
+}
+
+function getUrlStr() {
+    const GAS_SERVER = "AKfycbzOBoZ7L-7NYbCIHvRWpM1FgHJEpp-qaLV_sP_1WzfMELLrKLUp_KtswIYnkxxg-wBK/exec";
+    return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
+}
+
+function getUserInfo() {
+    const poolData = {
+        UserPoolId: 'ap-northeast-1_s2bRf3054',  // ユーザープールID
+        ClientId: '5i7fv4lllu23b9o1ggqnvitqsd'  // アプリクライアントID
+    };
+
+    const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    const cognitoUser = userPool.getCurrentUser();
+
+    if (cognitoUser) {
+        cognitoUser.getSession((err, session) => {
+            if (err) {
+                console.error("セッション取得失敗:", err);
+                return;
+            }
+
+            console.log("JWTトークン:", session.getIdToken().getJwtToken());
+
+            cognitoUser.getUserAttributes((err, attributes) => {
+                if (err) {
+                    console.error("属性取得失敗:", err);
+                    return;
+                }
+
+                const userInfo = {};
+                attributes.forEach(attr => {
+                    userInfo[attr.getName()] = attr.getValue();
+                });
+
+                console.log("ユーザー情報:", userInfo);
+            });
+        });
+    } else {
+        console.log("ログインしていません");
+    }
 }
