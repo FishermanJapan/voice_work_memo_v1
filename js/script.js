@@ -431,8 +431,8 @@ async function doOkStartModal() {
         }
 
         const json = await JSON.parse(await res.text());
-        if (Array.isArray(json.body.table_data)) {
-            populateTable(json.body.table_data);
+        if (Array.isArray(json.table_data)) {
+            populateTable(json.table_data);
             currentDate = date;
             currentId = id;
             userNm = json.body.user_nm;
