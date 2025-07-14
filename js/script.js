@@ -669,7 +669,7 @@ function getUrlStr() {
 
 function getUserInfo() {
     const userIdCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
-    const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.idToken";
+    const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.accessToken";
     const cookies = document.cookie.split(";");
 
     for (const cookie of cookies) {
