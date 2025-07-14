@@ -6,6 +6,8 @@ let currentDate = "";
 let currentId = "";
 let lastSnapshot = null;
 let userId = null;
+let userNm = "";
+let corpNm = "";
 
 window.addEventListener("beforeunload", function (e) {
     if (hasTableData()) {
@@ -406,31 +408,36 @@ async function doOkStartModal() {
 
     // APIへPOST
     try {
+        const API_BASE = `${location.origin}/api`;
+
         const payload = {
-            data_typ: "request",
+            user_id: userId,
             date,
             id
         };
 
-        const options = {
-            method: 'POST',
-            'Content-Type': "application/json",
-            body: JSON.stringify(payload)
-        };
-        const res = await fetch(getUrlStr(), options);
+        const res = await fetch(`${API_BASE}/request`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
 
         if (!res.ok) {
             alert("APIのリクエストに失敗しました。。\r\nシステム管理者に連絡してください。");
         }
 
         const json = await JSON.parse(await res.text());
-        if (Array.isArray(json.data)) {
-            populateTable(json.data);
+        if (Array.isArray(json.body.table_data)) {
+            populateTable(json.body.table_data);
             currentDate = date;
             currentId = id;
+            userNm = json.body.user_nm;
+            corpNm = json.body.corp_nm;
             document.getElementById("start-modal").classList.add("hidden");
             document.getElementById('overlay').classList.add('hidden');
-            updateInfoDisplay(date, id);
+            updateInfoDisplay(date, id, userNm, corpNm);
             startRecognition();
         } else {
             alert("無効なレスポンスです。\r\nシステム管理者に連絡してください。");
@@ -600,9 +607,9 @@ function scrollToSelectedRow() {
     }
 }
 
-function updateInfoDisplay(dateStr, idStr) {
+function updateInfoDisplay(dateStr, idStr, userNmStr, corpNmStr) {
     const infoDiv = document.getElementById("info-display");
-    infoDiv.textContent = ` 日付: ${dateStr} / ID: ${idStr} `;
+    infoDiv.textContent = ` 名前: ${userNmStr} / 企業: ${corpNmStr} / 日付: ${dateStr} / ID: ${idStr} `;
 }
 
 function normalizeTextWithNumbers(text) {
@@ -671,5 +678,5 @@ function getUserInfo() {
         }
     }
 
-    console.log("ログイン情報が取得できませんでした。システム管理者へお問い合わせください。");
+    console.log("ログイン情報が取得できませんでした。\r\nシステム管理者へお問い合わせください。");
 }
