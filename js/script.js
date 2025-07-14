@@ -6,6 +6,7 @@ let currentDate = "";
 let currentId = "";
 let lastSnapshot = null;
 let userId = null;
+let idToken = null;
 let userNm = "";
 let corpNm = "";
 
@@ -419,13 +420,14 @@ async function doOkStartModal() {
         const res = await fetch(`${API_BASE}/request`, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': idToken
           },
           body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
-            alert("APIのリクエストに失敗しました。。\r\nシステム管理者に連絡してください。");
+            alert("APIのリクエストに失敗しました。\r\nシステム管理者に連絡してください。");
         }
 
         const json = await JSON.parse(await res.text());
@@ -666,14 +668,19 @@ function getUrlStr() {
 }
 
 function getUserInfo() {
-    const cookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
+    const userIdCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
+    const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.idToken";
     const cookies = document.cookie.split(";");
 
     for (const cookie of cookies) {
         const [key, value] = cookie.trim().split("=");
-        if (key === cookieName) {
+        if (key === userIdCookieName) {
             userId = decodeURIComponent(value);
             console.log("ログインユーザーID:", userId);
+            return;
+        }
+        if (key === idTokenCookieName) {
+            idToken = decodeURIComponent(value);
             return;
         }
     }
