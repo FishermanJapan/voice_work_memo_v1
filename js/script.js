@@ -5,6 +5,7 @@ let focusedColumn = "";
 let currentDate = "";
 let currentId = "";
 let lastSnapshot = null;
+let userId = null;
 
 window.addEventListener("beforeunload", function (e) {
     if (hasTableData()) {
@@ -658,38 +659,17 @@ function getUrlStr() {
 }
 
 function getUserInfo() {
-    const poolData = {
-        UserPoolId: 'ap-northeast-1_s2bRf3054',  // ユーザープールID
-        ClientId: '5i7fv4lllu23b9o1ggqnvitqsd'  // アプリクライアントID
-    };
+    const cookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
+    const cookies = document.cookie.split(";");
 
-    const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-    const cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser) {
-        cognitoUser.getSession((err, session) => {
-            if (err) {
-                console.error("セッション取得失敗:", err);
-                return;
-            }
-
-            console.log("JWTトークン:", session.getIdToken().getJwtToken());
-
-            cognitoUser.getUserAttributes((err, attributes) => {
-                if (err) {
-                    console.error("属性取得失敗:", err);
-                    return;
-                }
-
-                const userInfo = {};
-                attributes.forEach(attr => {
-                    userInfo[attr.getName()] = attr.getValue();
-                });
-
-                console.log("ユーザー情報:", userInfo);
-            });
-        });
-    } else {
-        console.log("ログインしていません");
+    for (const cookie of cookies) {
+        const [key, value] = cookie.trim().split("=");
+        if (key === cookieName) {
+            userId = decodeURIComponent(value);
+            console.log("ログインユーザーID:", userId);
+            return;
+        }
     }
+
+    console.log("ログイン情報が取得できませんでした。システム管理者へお問い合わせください。");
 }
