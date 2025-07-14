@@ -418,32 +418,33 @@ async function doOkStartModal() {
         };
 
         const res = await fetch(`${API_BASE}/request`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': idToken
-          },
-          body: JSON.stringify(payload)
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': idToken
+            },
+            body: JSON.stringify(payload)
         });
 
-        if (!res.ok) {
+        const json = await JSON.parse(await res.text());
+        if (!json.status) {
             alert("APIのリクエストに失敗しました。\r\nシステム管理者に連絡してください。");
+        } else {
+            if (Array.isArray(json.table_data)) {
+                populateTable(json.table_data);
+                currentDate = date;
+                currentId = id;
+                userNm = json.user_nm;
+                corpNm = json.corp_nm;
+                document.getElementById("start-modal").classList.add("hidden");
+                document.getElementById('overlay').classList.add('hidden');
+                updateInfoDisplay(date, id, userNm, corpNm);
+                startRecognition();
+            } else {
+                alert("無効なレスポンスです。\r\nシステム管理者に連絡してください。");
+            }
         }
 
-        const json = await JSON.parse(await res.text());
-        if (Array.isArray(json.table_data)) {
-            populateTable(json.table_data);
-            currentDate = date;
-            currentId = id;
-            userNm = json.user_nm;
-            corpNm = json.corp_nm;
-            document.getElementById("start-modal").classList.add("hidden");
-            document.getElementById('overlay').classList.add('hidden');
-            updateInfoDisplay(date, id, userNm, corpNm);
-            startRecognition();
-        } else {
-            alert("無効なレスポンスです。\r\nシステム管理者に連絡してください。");
-        }
     } catch (err) {
         alert("データ取得に失敗しました。\r\nシステム管理者に連絡してください。\r\n" + err.message);
     } finally {
@@ -493,36 +494,41 @@ function populateTable(data) {
     lastSnapshot = JSON.stringify(getTableSnapshot());
 }
 
-function sendUpdateData() {
+async function sendUpdateData() {
     if (!currentDate || !currentId) return;
 
     showSaveStatus("保存中...", "orange");
+    try {
+        const API_BASE = `${location.origin}/api`;
 
-    const payload = {
-        data_typ: "update",
-        date: currentDate,
-        id: currentId,
-        data: getTableSnapshot()
-    };
+        const payload = {
+            user_id: userId,
+            date: currentDate,
+            id: currentId,
+            table_data: getTableSnapshot()
+        };
 
-    const options = {
-        method: 'POST',
-        'Content-Type': "application/json",
-        body: JSON.stringify(payload)
-    };
+        const res = await fetch(`${API_BASE}/update`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': idToken
+            },
+            body: JSON.stringify(payload)
+        });
 
-    fetch(getUrlStr(), options)
-        .then(res => {
-            if (!res.ok) {
-                alert("APIのリクエストに失敗しました。。\r\nシステム管理者に連絡してください。");
-                return;
-            }
+        const json = await JSON.parse(await res.text());
 
+        if (!json.status) {
+            alert("APIのリクエストに失敗しました。\r\nシステム管理者に連絡してください。");
+        } else {
             // 成功表示
             showSaveStatus("保存が完了しました。", "green");
-        }).catch(err => {
-            alert("データの更新に失敗しました。\r\nシステム管理者に連絡してください。");
-        });
+        }
+
+    } catch (err) {
+        alert("データ取得に更新しました。\r\nシステム管理者に連絡してください。\r\n" + err.message);
+    }
 }
 
 function getTableSnapshot() {
@@ -611,7 +617,7 @@ function scrollToSelectedRow() {
 
 function updateInfoDisplay(dateStr, idStr, userNmStr, corpNmStr) {
     const infoDiv = document.getElementById("info-display");
-    infoDiv.textContent = ` 名前: ${userNmStr} / 企業: ${corpNmStr} / 日付: ${dateStr} / ID: ${idStr} `;
+    infoDiv.textContent = ` ${userNmStr} / ${corpNmStr} / 日付: ${dateStr} / ID: ${idStr} `;
 }
 
 function normalizeTextWithNumbers(text) {
