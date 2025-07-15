@@ -415,7 +415,7 @@ async function doOkStartModal() {
             id
         };
 
-        const res = apiRequest('request', payload)
+        const res = await apiRequest('request', payload)
         const json = await JSON.parse(await res.text());
         if (!json.status) {
             alertMsg("APIのリクエストに失敗しました。");
@@ -496,7 +496,7 @@ async function sendUpdateData() {
             table_data: getTableSnapshot()
         };
 
-        const res = apiRequest('update', payload);
+        const res = await apiRequest('update', payload);
         const json = await JSON.parse(await res.text());
         if (!json.status) {
             alertMsg("APIのリクエストに失敗しました。")
