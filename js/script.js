@@ -341,15 +341,8 @@ function logout() {
     const domain = "ap-northeast-1s2brf3054.auth.ap-northeast-1.amazoncognito.com";
     const clientId = "5i7fv4lllu23b9o1ggqnvitqsd";
     const redirectUri = location.origin;
+
     const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(redirectUri)}`;
-
-    // Cookieの削除
-    for (const cookie of document.cookie.split(";")) {
-        console.log(cookie);
-        const dt = new Date('1999-12-31T23:59:59Z'); // 過去の日付をGMT形式に変換
-        document.cookie = cookie + "; expires=" + dt.toUTCString();
-    }
-
     window.location.href = logoutUrl;
 }
 
@@ -664,6 +657,7 @@ function normalizeTextWithNumbers(text) {
 
 function getUserInfo() {
     const userIdCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
+    const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.accessToken";
     const cookies = document.cookie.split(";");
 
     for (const cookie of cookies) {
