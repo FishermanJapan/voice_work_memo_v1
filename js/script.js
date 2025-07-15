@@ -344,7 +344,9 @@ function logout() {
         const dt = new Date('1999-12-31T23:59:59Z'); // 過去の日付をGMT形式に変換
         document.cookie = cookie + "; expires=" + dt.toUTCString();
     }
-    window.location.reload();
+    setInterval(() => {
+        window.location.reload();
+    }, 1000)
 }
 
 function updateHighlights(isClear = false) {
