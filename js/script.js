@@ -337,6 +337,15 @@ function updateDownloadButtonState() {
     downloadBtn.disabled = dataRowCount === 0;
 }
 
+function logout() {
+    const domain = "ap-northeast-1s2brf3054.auth.ap-northeast-1.amazoncognito.com";
+    const clientId = "5i7fv4lllu23b9o1ggqnvitqsd";
+    const redirectUri = location.origin;
+
+    const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(redirectUri)}`;
+    window.location.href = logoutUrl;
+}
+
 function updateHighlights(isClear = false) {
     const rows = document.querySelectorAll("#data-table tbody tr");
     const colIndex = !focusedColumn ? -1 : columnMap[focusedColumn];
