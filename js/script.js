@@ -6,7 +6,6 @@ let currentDate = "";
 let currentId = "";
 let lastSnapshot = null;
 let userId = null;
-let idToken = null;
 let userNm = "";
 let corpNm = "";
 
@@ -652,23 +651,16 @@ function getUserInfo() {
     const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.accessToken";
     const cookies = document.cookie.split(";");
 
-    okTimes = 0;
     for (const cookie of cookies) {
         const [key, value] = cookie.trim().split("=");
         if (key === userIdCookieName) {
             userId = decodeURIComponent(value);
             console.log("ログインユーザーID:", userId);
-            okTimes += 1;
-        }
-        if (key === idTokenCookieName) {
-            idToken = decodeURIComponent(value);
-            okTimes += 1;
+            return;
         }
     }
 
-    if(okTimes < 2){
-        alertMsg("ログイン情報が取得できませんでした。");
-    }
+    alertMsg("ログイン情報が取得できませんでした。");
 }
 
 function alertMsg(msg, errMsg = null) {
@@ -684,8 +676,7 @@ async function apiRequest(apiNm, payload) {
     return await fetch(`${API_BASE}/${apiNm}`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            'Authorization': idToken
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
     });
