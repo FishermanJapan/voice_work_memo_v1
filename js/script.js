@@ -66,7 +66,7 @@ const columnPhysicalMap = {
 function initSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-        alert('このブラウザはSpeechRecognition APIに対応していません。');
+        alertMsg('このブラウザはSpeechRecognition APIに対応していません。');
         return null;
     }
 
@@ -409,26 +409,16 @@ async function doOkStartModal() {
 
     // APIへPOST
     try {
-        const API_BASE = `${location.origin}/api`;
-
         const payload = {
             user_id: userId,
             date,
             id
         };
 
-        const res = await fetch(`${API_BASE}/request`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': idToken
-            },
-            body: JSON.stringify(payload)
-        });
-
+        const res = apiRequest('request', payload)
         const json = await JSON.parse(await res.text());
         if (!json.status) {
-            alert("APIのリクエストに失敗しました。\r\nシステム管理者に連絡してください。");
+            alertMsg("APIのリクエストに失敗しました。");
         } else {
             if (Array.isArray(json.table_data)) {
                 populateTable(json.table_data);
@@ -441,12 +431,12 @@ async function doOkStartModal() {
                 updateInfoDisplay(date, id, userNm, corpNm);
                 startRecognition();
             } else {
-                alert("無効なレスポンスです。\r\nシステム管理者に連絡してください。");
+                alertMsg("無効なレスポンスです。");
             }
         }
 
     } catch (err) {
-        alert("データ取得に失敗しました。\r\nシステム管理者に連絡してください。\r\n" + err.message);
+        alertMsg("データ取得に失敗しました。", err.message);
     } finally {
         // ダイアログのボタンを再度有効化
         dialogOkBtn.disabled = false;
@@ -499,8 +489,6 @@ async function sendUpdateData() {
 
     showSaveStatus("保存中...", "orange");
     try {
-        const API_BASE = `${location.origin}/api`;
-
         const payload = {
             user_id: userId,
             date: currentDate,
@@ -508,26 +496,17 @@ async function sendUpdateData() {
             table_data: getTableSnapshot()
         };
 
-        const res = await fetch(`${API_BASE}/update`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': idToken
-            },
-            body: JSON.stringify(payload)
-        });
-
+        const res = apiRequest('update', payload);
         const json = await JSON.parse(await res.text());
-
         if (!json.status) {
-            alert("APIのリクエストに失敗しました。\r\nシステム管理者に連絡してください。");
+            alertMsg("APIのリクエストに失敗しました。")
         } else {
             // 成功表示
             showSaveStatus("保存が完了しました。", "green");
         }
 
     } catch (err) {
-        alert("データ取得に更新しました。\r\nシステム管理者に連絡してください。\r\n" + err.message);
+        alertMsg("データ取得に更新しました。", err.message);
     }
 }
 
@@ -668,11 +647,6 @@ function normalizeTextWithNumbers(text) {
     return text;
 }
 
-function getUrlStr() {
-    const GAS_SERVER = "AKfycbzOBoZ7L-7NYbCIHvRWpM1FgHJEpp-qaLV_sP_1WzfMELLrKLUp_KtswIYnkxxg-wBK/exec";
-    return `https://script.google.com/macros/s/${GAS_SERVER}/exec`
-}
-
 function getUserInfo() {
     const userIdCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.LastAuthUser";
     const idTokenCookieName = "CognitoIdentityServiceProvider.5i7fv4lllu23b9o1ggqnvitqsd.test.accessToken";
@@ -692,4 +666,24 @@ function getUserInfo() {
     }
 
     console.log("ログイン情報が取得できませんでした。\r\nシステム管理者へお問い合わせください。");
+}
+
+function alertMsg(msg, errMsg = null) {
+    const now = new Date();
+    const formatted = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ` +
+        `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+    alert(`${msg}\r\nシステム管理者に連絡してください。\r\n${errMsg + '\r\n' || ''}\r\n現在時刻:${formatted}`);
+}
+
+async function apiRequest(apiNm, payload) {
+    const API_BASE = `${location.origin}/api`;
+
+    return await fetch(`${API_BASE}/${apiNm}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            'Authorization': idToken
+        },
+        body: JSON.stringify(payload)
+    });
 }
