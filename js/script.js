@@ -337,10 +337,12 @@ function updateDownloadButtonState() {
     downloadBtn.disabled = dataRowCount === 0;
 }
 
-function logout() {
+async function logout() {
     const domain = "ap-northeast-1s2brf3054.auth.ap-northeast-1.amazoncognito.com";
     const clientId = "5i7fv4lllu23b9o1ggqnvitqsd";
     const redirectUri = location.origin;
+
+    await deleteAllCookies();
 
     const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(redirectUri)}`;
     window.location.href = logoutUrl;
@@ -689,4 +691,24 @@ async function apiRequest(apiNm, payload) {
         },
         body: JSON.stringify(payload)
     });
+}
+
+async function deleteAllCookies() {
+  const cookies = document.cookie.split(";");
+
+  cookies.forEach(cookie => {
+    const name = cookie.split("=")[0].trim();
+
+    const paths = ["/", location.pathname];
+    const domains = [location.hostname, "." + location.hostname];
+
+    paths.forEach(path => {
+      domains.forEach(domain => {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=${path};domain=${domain}`;
+      });
+    });
+
+    // 最低限の削除も再度
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+  });
 }
