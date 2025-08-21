@@ -531,11 +531,11 @@ function getTableSnapshot() {
 
         const record = {
             index: i + 1,
-            weight: parseFloat(cells[1].textContent) || null,
-            times: parseFloat(cells[2].textContent) || null,
-            start_time: cells[3].textContent || null,
-            end_time: cells[4].textContent || null,
-            temp: parseFloat(cells[5].textContent) || null
+            weight: parseFloat(cells[1].textContent) ?? null,
+            times: parseFloat(cells[2].textContent) ?? null,
+            start_time: cells[3].textContent ?? null,
+            end_time: cells[4].textContent ?? null,
+            temp: parseFloat(cells[5].textContent) ?? null
         };
 
         const allEmpty = Object.values(record).slice(1).every(v => !v);
